@@ -3,6 +3,7 @@ package nl.joozd
 import nl.joozd.days.Day
 import nl.joozd.days.Day1
 import nl.joozd.days.Day2
+import nl.joozd.days.Day3
 import kotlin.time.TimedValue
 import kotlin.time.measureTimedValue
 
@@ -20,6 +21,8 @@ fun main() {
             101 -> runDay(Day1(isTest = true))
             2 -> runDay(Day2())
             102 -> runDay(Day2(isTest = true))
+            3 -> runDay(Day3())
+            103 -> runDay(Day3(isTest = true))
             else -> break
         }
     }
