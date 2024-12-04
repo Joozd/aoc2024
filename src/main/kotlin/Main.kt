@@ -1,9 +1,6 @@
 package nl.joozd
 
-import nl.joozd.days.Day
-import nl.joozd.days.Day1
-import nl.joozd.days.Day2
-import nl.joozd.days.Day3
+import nl.joozd.days.*
 import kotlin.time.TimedValue
 import kotlin.time.measureTimedValue
 
@@ -23,6 +20,8 @@ fun main() {
             102 -> runDay(Day2(isTest = true))
             3 -> runDay(Day3())
             103 -> runDay(Day3(isTest = true))
+            4 -> runDay(Day4())
+            104 -> runDay(Day4(isTest = true))
             else -> break
         }
     }
