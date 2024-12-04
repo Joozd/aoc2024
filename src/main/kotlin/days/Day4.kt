@@ -58,8 +58,8 @@ class Day4(isTest: Boolean = false): Day(4, isTest) {
      * Check if [location] is a valid location in [puzzle] and contains [wantedChar]
      */
     private fun checkLocation(puzzle: Array<CharArray>, location: IntVector, wantedChar: Char): Boolean =
-        location.y in puzzle.indices && location.x in puzzle[0].indices &&
-            puzzle[location.y][location.x] == wantedChar
+        location[1] in puzzle.indices && location[0] in puzzle[0].indices &&
+            puzzle[location[1]][location[0]] == wantedChar
 
     companion object{
         private val allDirections = listOf(

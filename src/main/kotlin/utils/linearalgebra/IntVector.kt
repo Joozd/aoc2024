@@ -6,11 +6,11 @@ package nl.joozd.aoc2023.common.linearalgebra
 open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
     constructor(x: List<Int>): this(*x.toIntArray())
 
-    protected val vector: IntArray = values
+    val vector: IntArray = values
 
-    val x get() = this[0]
+    val x get() = vector[0]
 
-    val y get() = this[1]
+    val y get() = vector[1]
 
     val size get() = vector.size
 
@@ -23,20 +23,20 @@ open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
     operator fun get(i: Int): Int = vector[i]
 
     operator fun plus(other: IntVector): IntVector {
-        require(other.size == this.size) { "Can only add Vectors of same size" }
-        return IntVector(*IntArray(size) { vector[it] + other[it] })
+        //require(other.size == this.size) { "Can only add Vectors of same size" }
+        return IntVector(*IntArray(vector.size) { vector[it] + other[it] })
     }
 
     operator fun minus(other: IntVector): IntVector {
-        require(other.size == this.size) { "Can only subtract Vectors of same size" }
-        return IntVector(*IntArray(size) { vector[it] - other[it] })
+        //require(other.size == this.size) { "Can only subtract Vectors of same size" }
+        return IntVector(*IntArray(vector.size) { vector[it] - other[it] })
     }
 
     /**
      * Dot product. For cross product use (IntVector.cross(otherIntVector)
      */
     operator fun times(other: IntVector): Int {
-        require(other.size == this.size) { "Can only dot Vectors of same size" }
+        //require(other.size == this.size) { "Can only dot Vectors of same size" }
         return vector.indices.sumOf { vector[it] * other[it] }
     }
 
@@ -48,7 +48,15 @@ open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
     /**
      * Multiply this vector by a scalar
      */
-    operator fun times(scalar: Int): IntVector = IntVector(this.map { it * scalar})
+    //operator fun times(scalar: Int): IntVector = IntVector(this.map { it * scalar})
+
+    /**
+     * Multiply this vector by a scalar (faster)
+     */
+    operator fun times(scalar: Int): IntVector {
+        val newVectorArray = IntArray(vector.size) { vector[it] * scalar }
+        return IntVector(*newVectorArray)
+    }
 
     operator fun rangeTo(other: IntVector)= IntVectorRange(this, other)
 
