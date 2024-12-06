@@ -21,6 +21,6 @@ abstract class Day(private val numberOfDay: Int, isTest: Boolean = false) {
         val classLoader = Thread.currentThread().contextClassLoader
         val resource = classLoader.getResource(fileName)
             ?: throw IllegalArgumentException("File not found: $fileName")
-        return Files.readString(Paths.get(resource.toURI()))
+        return Files.readString(Paths.get(resource.toURI())).lines().joinToString("\n") // get rid of "\r\n" or whatever
     }
 }
