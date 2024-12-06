@@ -1,4 +1,4 @@
-package nl.joozd.aoc2023.common.linearalgebra
+package nl.joozd.utils.linearalgebra
 
 /**
  * IntVectors are immutable.

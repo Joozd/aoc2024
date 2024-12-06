@@ -1,4 +1,4 @@
-package nl.joozd.aoc2023.common.linearalgebra
+package nl.joozd.utils.linearalgebra
 
 class IntVectorMatrix(vararg columnVectors: IntVector) {
     init{
@@ -26,7 +26,7 @@ class IntVectorMatrix(vararg columnVectors: IntVector) {
      * Multiply this matrix with an IntVector
      */
     operator fun times(vector: IntVector): IntVector {
-        require(vector.size == matrix.size) { "Canot multiply vector with length${vector.size} with matrix with ${matrix.size} vectors; must be equal."}
+        require(vector.size == matrix.size) { "Can't multiply vector with length${vector.size} with matrix with ${matrix.size} vectors; must be equal."}
         if(length == 0) return IntVector() // multiplying an empty vector with an empty matrix, or a matrix with empty vectors, gives another empty vector
         return IntVector(rowVectors.map { it * vector })
     }

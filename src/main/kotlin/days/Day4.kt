@@ -1,6 +1,6 @@
 package nl.joozd.days
 
-import nl.joozd.aoc2023.common.linearalgebra.IntVector
+import nl.joozd.utils.linearalgebra.IntVector
 
 class Day4(isTest: Boolean = false): Day(4, isTest) {
     private val puzzle: Array<CharArray> = input.lines().map{it.toCharArray()}.toTypedArray()
