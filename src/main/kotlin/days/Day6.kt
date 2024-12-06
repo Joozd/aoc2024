@@ -67,11 +67,11 @@ class Day6(isTest: Boolean = false): Day(6, isTest) {
 
         while(nextPos.y in maze.indices && nextPos.x in maze.first().indices){
             if(maze[nextPos.y][nextPos.x] != '#') {// check if no obstacle
-                if(!visitedPositions.add(currentPos to currentDir)) return true // was already present, no adding
                 currentPos = nextPos
             }
             else{
                 currentDir *= Matrices.TURN_RIGHT_ASCII_MAP // matrix multiplication for turning right
+                if(!visitedPositions.add(currentPos to currentDir)) return true // only check turns, saves a lot of logic I think
             }
             nextPos = currentPos + currentDir
         }
