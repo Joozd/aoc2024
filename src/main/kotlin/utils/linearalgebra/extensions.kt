@@ -48,4 +48,16 @@ fun IntVector.manhattanDistanceTo(other: IntVector): Int =
 operator fun List<String>.get(gridLocation: IntVector): Char? =
     getOrNull(gridLocation[1])?.getOrNull(gridLocation[0])
 
+/**
+ * Divide x and y by largest common divider. Has room for optimization but don't think it will matter much
+ * Will return the original IntVector if unable to shorten
+ */
+fun IntVector.shorten(): IntVector{
+    val lowest = minOf(x, y)
+    (lowest downTo 2).forEach{ candidate ->
+        if(x%candidate == 0 && y%candidate == 0)
+            return IntVector(x/candidate, y/candidate)
+    }
+    return this
+}
 
