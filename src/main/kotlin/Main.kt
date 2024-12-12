@@ -37,6 +37,8 @@ fun main() {
 
             11 -> runDay(Day11())
             111 -> runDay(Day11(isTest = true))
+            12 -> runDay(Day12())
+            112 -> runDay(Day12(isTest = true))
             else -> break
 
         }
