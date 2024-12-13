@@ -1,4 +1,4 @@
-package utils
+package utils.linearalgebra
 
 import nl.joozd.utils.linearalgebra.IntVector
 import nl.joozd.utils.linearalgebra.shorten

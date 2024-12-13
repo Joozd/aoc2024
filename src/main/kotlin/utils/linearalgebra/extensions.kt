@@ -64,3 +64,14 @@ fun IntVector.shorten(): IntVector{
     return this
 }
 
+/**
+ * Get the scalar needed to go from [this] to [other]
+ * @return the scalar found, or null if they are not scaled by an exact integer from [this]
+ */
+fun LongVector.getLongScalarTo(other: LongVector): Long?{
+    if(other.x % x != 0L || other.y % y != 0L) return null // cannot scale by exact int
+    val scaleX = other.x / x
+    val scaleY = other.y / y
+    return if (scaleX == scaleY) scaleX else null
+}
+
