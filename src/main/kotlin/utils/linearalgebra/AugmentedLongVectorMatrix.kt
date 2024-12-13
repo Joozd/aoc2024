@@ -29,6 +29,12 @@ class AugmentedLongVectorMatrix(vararg columnVectors: LongVector): LongVectorMat
     // [ 0  1    2 ]
 
 
+    /**
+     * Find the scalars needed to get from the third column vector, using scaled versions of the first two
+     * @return a pair containing the needed scalars
+     *  null if no solution can be found
+     *  [INFINITE_SOLUTIONS] if there are infinite solutions
+     */
     fun findScalars(): Pair<Double, Double>?{
         // We do this with doubles, convert back to Int later if needed.
         val mm = Array(rowVectors.size) { rowIndex ->
@@ -70,7 +76,6 @@ class AugmentedLongVectorMatrix(vararg columnVectors: LongVector): LongVectorMat
         // now we should have
         // [ 1 0 x ]
         // [ 0 1 y ]
-
         return mm[0][2] to mm[1][2]
     }
 
