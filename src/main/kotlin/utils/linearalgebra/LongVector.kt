@@ -3,7 +3,7 @@ package nl.joozd.utils.linearalgebra
 /**
  * LongVectors are immutable.
  */
-open class LongVector(vararg values: Long): Iterable<Long>, Comparable<LongVector> {
+open class LongVector(vararg values: Long, private val comparator: LongVectorComparator = standardComparator): Iterable<Long>, Comparable<LongVector> {
     constructor(x: List<Long>): this(*x.toLongArray())
 
     val vector: LongArray = values
@@ -77,17 +77,11 @@ open class LongVector(vararg values: Long): Iterable<Long>, Comparable<LongVecto
      * to the specified [other] object, a negative number if it's less than [other], or a positive number
      * if it's greater than [other].
      * Undefined for vectors in different spans.
-     * Compares first element first, then second, etc, until it finds a difference.
-     * so (1,0) > (0,10) and (0,10) > (0,1)
      */
-    override fun compareTo(other: LongVector): Int {
-        if(other.size != this.size) return 0 // returns 0 for different length vectors
-        vector.indices.forEach{ i->
-            if (this[i] != other[i])
-                return (this[i] - other[i]).toInt()
-        }
-        return 0 // if no different values in Vector, they are the same.
-    }
+    override fun compareTo(other: LongVector): Int =
+        if(other.size != this.size) 0 // returns 0 for different length vectors
+        else comparator.compare(this, other)
+
 
     override fun equals(other: Any?) =
         if (other !is LongVector) false
@@ -100,4 +94,27 @@ open class LongVector(vararg values: Long): Iterable<Long>, Comparable<LongVecto
     override fun iterator(): Iterator<Long> = vector.iterator()
 
     override fun toString(): String = "[${vector.joinToString()}]"
+
+    fun interface LongVectorComparator{
+        /**
+         * Vectors can be assumed to be the same length
+         */
+        fun compare(thisVector: LongVector, other: LongVector): Int
+    }
+
+    companion object{
+        /**
+         * Compares first element first, then second, etc., until it finds a difference.
+         * so (1,0) > (0,10) and (0,10) > (0,1)
+         */
+        private val standardComparator = object: LongVectorComparator{
+            override fun compare(thisVector: LongVector, other: LongVector): Int {
+                thisVector.vector.indices.forEach{ i->
+                    if (thisVector[i] != other[i])
+                        return (thisVector[i] - other[i]).toInt()
+                }
+                return 0 // if no different values in Vector, they are the same.
+            }
+        }
+    }
 }

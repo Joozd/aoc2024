@@ -3,7 +3,7 @@ package nl.joozd.utils.linearalgebra
 /**
  * IntVectors are immutable.
  */
-open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
+open class IntVector(vararg values: Int, private val comparator: IntVectorComparator = standardComparator): Iterable<Int>, Comparable<IntVector> {
     constructor(x: List<Int>): this(*x.toIntArray())
 
     val vector: IntArray = values
@@ -77,17 +77,11 @@ open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
      * to the specified [other] object, a negative number if it's less than [other], or a positive number
      * if it's greater than [other].
      * Undefined for vectors in different spans.
-     * Compares first element first, then second, etc, until it finds a difference.
-     * so (1,0) > (0,10) and (0,10) > (0,1)
      */
-    override fun compareTo(other: IntVector): Int {
-        if(other.size != this.size) return 0 // returns 0 for different length vectors
-        vector.indices.forEach{ i->
-            if (this[i] != other[i])
-                return this[i] - other[i]
-        }
-        return 0 // if no different values in Vector, they are the same.
-    }
+    override fun compareTo(other: IntVector): Int =
+        if(other.size != this.size) 0 // returns 0 for different length vectors
+        else comparator.compare(this, other)
+
 
     override fun equals(other: Any?) =
         if (other !is IntVector) false
@@ -101,11 +95,45 @@ open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
 
     override fun toString(): String = "[${vector.joinToString()}]"
 
-    // Helper function to get the value in a list of Strings. Used a lot in ASCII maps.
-    fun itemInMap(stringsList: List<String>): Char? =
-        stringsList.getOrNull(vector[1])?.getOrNull(vector[0])
+    fun interface IntVectorComparator{
+        /**
+         * Vectors can be assumed to be the same length
+         */
+        fun compare(thisVector: IntVector, other: IntVector): Int
+    }
 
     companion object{
+        /**
+         * Compares first element first, then second, etc., until it finds a difference.
+         * so (1,0) > (0,10) and (0,10) > (0,1)
+         */
+        val standardComparator = object: IntVectorComparator{
+            override fun compare(thisVector: IntVector, other: IntVector): Int {
+                thisVector.vector.indices.forEach{ i->
+                    if (thisVector[i] != other[i])
+                        return (thisVector[i] - other[i]).toInt()
+                }
+                return 0 // if no different values in Vector, they are the same.
+            }
+        }
+
+        val coordinatesComparator = object: IntVectorComparator{
+            /**
+             * Vectors can be assumed to be the same length
+             * Compares last value first, then first (so y, then x)
+             */
+            override fun compare(
+                thisVector: IntVector,
+                other: IntVector
+            ): Int {
+                thisVector.vector.indices.reversed().forEach{ i->
+                    if (thisVector[i] != other[i])
+                        return (thisVector[i] - other[i]).toInt()
+                }
+                return 0
+            }
+        }
+
         // helpers for 2d grids
         val NORTH = IntVector(0,-1)
         val EAST  = IntVector(1,0)
@@ -116,5 +144,6 @@ open class IntVector(vararg values: Int): Iterable<Int>, Comparable<IntVector> {
         val NE = NORTH + EAST
         val SE = SOUTH + EAST
         val SW = SOUTH + WEST
+
     }
 }

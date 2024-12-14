@@ -5,8 +5,6 @@ import nl.joozd.utils.dumpGridToString
 import nl.joozd.utils.linearalgebra.IntVector
 import nl.joozd.utils.linearalgebra.LongVector
 import nl.joozd.utils.linearalgebra.LongVectorRange
-import kotlin.io.path.Path
-import kotlin.io.path.bufferedWriter
 
 class Day14(isTest: Boolean = false) : Day(14, isTest) {
     val xSize: Long = if (isTest) 11 else 101 // from problem description
@@ -26,30 +24,39 @@ class Day14(isTest: Boolean = false) : Day(14, isTest) {
      * So, I decided to check the first 10K seconds (which in hindsight was just a little on the short side as 101*103
      * is slightly more than that) and manually checked the outputs.
      * This because I had no idea what the tree would look like
-     * and no guarantees there would be, for instance, 10 robots in a row in the tree.
+     * and no guarantees there would be, for instance, 6 robots in a row in the tree.
+     *
+     * That worked, but did need a bunch of manual checking. So second time (helped by some knowledge of the tree)
+     * I did implement my backup plan checking for 6 in a row,
+     * and asking user input to see if the tree was in the result.
      */
     override fun second(): Long {
-        Path("day14_output_103.txt").bufferedWriter().use{ writer ->
-            var seconds = 63L
-            while(seconds < 10000){
-                val positionsAfterNSeconds = robots.map { it.move(seconds, xSize, ySize)}.map { IntVector(it[0].toInt(), it[1].toInt()) } // need IntVectors instead of long, for dumping map
-                writer.write("$seconds SECONDS:\n")
-                writer.write(dumpGridToString(positionsAfterNSeconds))
-                writer.write("\n\n\n")
-                seconds += 103
+            var seconds = -1L
+            var answer = "n"
+            while(answer != "y" ) {
+                seconds++
+                val positionsAfterNSeconds = robots.map { it.move(seconds, xSize, ySize) }
+                    .map { IntVector(it[0].toInt(), it[1].toInt(), comparator = IntVector.coordinatesComparator) }
+                    .sorted() // need IntVectors instead of long, for dumping map
+                if (hasNInARow(positionsAfterNSeconds)) {
+                    val map = dumpGridToString(positionsAfterNSeconds)
+                    println(map)
+                    println("\n Any christmas tree in this? (y/n)\n")  // anything not lowercase "y" means no
+                    answer = readln()
+                }
             }
-        }
-        Path("day14_output_101.txt").bufferedWriter().use{ writer ->
-            var seconds = 82L
-            while(seconds < 10000){
-                val positionsAfterNSeconds = robots.map { it.move(seconds, xSize, ySize)}.map { IntVector(it[0].toInt(), it[1].toInt()) } // need IntVectors instead of long, for dumping map
-                writer.write("$seconds SECONDS:\n")
-                writer.write(dumpGridToString(positionsAfterNSeconds))
-                writer.write("\n\n\n")
-                seconds += 101
+            return seconds
+    }
+
+    private fun hasNInARow(positions: List<IntVector>, n: Int = 6): Boolean{
+        outer@for (i in 0..positions.size - 1 - n){
+            for ( offset in 1..n) {
+                if (positions[i + offset].x != positions[i].x + offset)
+                    continue@outer
             }
+            return true // we made it through 1..6!
         }
-        return -1
+        return false // no 6 in a row found
     }
 
     /**
@@ -73,4 +80,5 @@ class Day14(isTest: Boolean = false) : Day(14, isTest) {
                positions.count { it in bottomRight }
             .toLong()
     }
+
 }
