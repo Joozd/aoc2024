@@ -22,7 +22,7 @@ class LongVectorRange(start: LongVector, endInclusive: LongVector) : ClosedRange
             start[it] <= other.endInclusive[it] && endInclusive[it] >= other.start[it]
         }
 
-    override fun toString() = "IntVector($start)..($endInclusive)"
+    override fun toString() = "LongVector($start)..($endInclusive)"
 
 
     fun measure(): Long{
