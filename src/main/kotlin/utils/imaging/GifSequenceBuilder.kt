@@ -45,6 +45,10 @@ class GifSequenceBuilder<T>(
         return this
     }
 
+    /**
+     * Writes the currently created gif to disk.
+     * @param fileName The name of the file to write to
+     */
     fun writeGif(fileName: String){
         if (frames.isEmpty()) error ("Cannot build an empty gif")
         GifSequenceWriter(fileName, frames.first().type, delay.inWholeMilliseconds.toInt(), loop).use{ writer ->
