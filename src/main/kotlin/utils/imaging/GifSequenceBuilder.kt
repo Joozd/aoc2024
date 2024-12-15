@@ -7,13 +7,16 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * Delay in ms
+ * Builds a .gif animation
+ * @property delay The delay between two frames (default 100 millis)
+ * @property loop if true, the animation will loop (default true)
+ * @property scale The size of every pixel (default 5x5 pixels)
+ * @property colorMaker a [ColorMaker] that defines what value gets what color.
+ *
  * use:
- * val gifMaker = GifSequenceBuilder(delay = 100, loop = true)
+ * val gifMaker = GifSequenceBuilder(delay = 100, loop = true, scale = 3, colorMaker = myColorMaker)
  * repeat(10){
- *  gifMaker.addCoordinates(someCoordinates, scale = 3) {
- *     if (it.value == '#' 0xFFFFFF else 0x000000
- *  }
+ *  gifMaker.addCoordinates(someCoordinates)
  * gifMaker.writeGif("filename.gif")
  */
 class GifSequenceBuilder<T>(
@@ -31,8 +34,14 @@ class GifSequenceBuilder<T>(
         frames.add(frame)
     }
 
-    fun addCoordinates(coordinates: Collection<IntVectorWithValue<T>>): GifSequenceBuilder<T>{
-        addFrame(PNGMap(coordinates, scale, colorMaker).makeBufferedImage())
+    /**
+     * Add a frame to this gif
+     * @param coordinates A collection of [IntVectorWithValue] objects to be plotted
+     * @param overrideColorMaker A new ColorMaker, to override the one defined in the creation of this GifSequenceBuilder
+     * @return this GifSequenceBuilder instance
+     */
+    fun addCoordinates(coordinates: Collection<IntVectorWithValue<T>>, overrideColorMaker: ColorMaker<T>? = null): GifSequenceBuilder<T>{
+        addFrame(PNGMap(coordinates, scale, overrideColorMaker ?: colorMaker).makeBufferedImage())
         return this
     }
 
@@ -44,7 +53,6 @@ class GifSequenceBuilder<T>(
             }
         }
     }
-
 
     private fun prepareFrame(frame: BufferedImage): BufferedImage{
         val w = width()
