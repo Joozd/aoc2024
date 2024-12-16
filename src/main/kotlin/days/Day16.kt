@@ -3,6 +3,7 @@ package nl.joozd.days
 import nl.joozd.utils.linearalgebra.IntVector
 import nl.joozd.utils.linearalgebra.Matrices
 import nl.joozd.utils.linearalgebra.get
+import nl.joozd.utils.removeDeadEndsFromMaze
 import java.util.*
 
 /**
@@ -10,13 +11,14 @@ import java.util.*
  * https://adventofcode.com/2024/day/16
  */
 class Day16(isTest: Boolean = false) : Day(16, isTest) {
-    private val maze = input.lines()
+    private val maze = removeDeadEndsFromMaze(input.lines())
 
     override fun first(): Long {
         val startAndEnd = findStartAndEnd(maze)
         val map = maze.map { it.replace('E', '.')} // this way we only have to check for '.' and not both '.' and 'E'. Check for end using [endpos].
         val result = dijkstraHelemaalDeMoeder(map, startAndEnd.first, startAndEnd.second)
 
+        println("Simplified maze:\n${maze.joinToString("\n")}")
         return result.toLong()
     }
 

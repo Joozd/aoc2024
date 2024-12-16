@@ -51,6 +51,7 @@ operator fun List<String>.get(gridLocation: IntVector): Char? =
 operator fun <T> List<List<T>>.get(gridLocation: IntVector): T? =
     getOrNull(gridLocation[1])?.getOrNull(gridLocation[0])
 
+
 /**
  * Divide x and y by largest common divider. Has room for optimization but don't think it will matter much
  * Will return the original IntVector if unable to shorten
