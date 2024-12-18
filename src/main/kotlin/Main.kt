@@ -68,11 +68,38 @@ private fun runDay(day: Day){
 }
 
 private fun printResults(day: Day, first: TimedValue<Any>, second: TimedValue<Any>) {
-    println("******************************************************")
-    println("***************      Day $day     **********************")
-    println("******************************************************")
-    println("1. ${first.value.toString().padStart(15, ' ')} - ${first.duration}")
-    println("2. ${second.value.toString().padStart(15, ' ')} - ${second.duration}")
-    println(". ${"Total time".padStart(15, ' ')} - ${first.duration + second.duration}")
-    println("******************************************************")
+    val totalTimedValue: TimedValue<Any> = TimedValue("Total time", first.duration + second.duration)
+    println(starLine())
+    println(dayLine(day))
+    println(starLine())
+    println(timedResultLine(1, first))
+    println(timedResultLine(2, second))
+    println(timedResultLine(null, totalTimedValue))
+    println(starLine())
 }
+
+private fun starLine() = "*".repeat(OUTPUT_WIDTH)
+
+private fun dayLine(day: Day): String{
+    val margin = 4
+    val text = "Day $day"
+    val remaining = OUTPUT_WIDTH - 2*margin - text.length
+    val before = remaining/2
+    val after = (remaining + 1)/2 // rounded up
+    return "*".repeat(before) + " ".repeat(margin) + text + " ".repeat(margin) + "*".repeat(after)
+}
+
+private fun timedResultLine(number: Int?, result: TimedValue<Any>): String{
+    // **  1. 1233456       - 24.990800ms  ** // take 12 chars for timing
+    val start = "**  "
+    val end = "  **"
+    val distanceForNumber = 3 // "1. "
+    val numberText = number?.let {"$it.".padEnd(distanceForNumber)} ?: " ".repeat(distanceForNumber)
+    val charsForTime = 16
+    val time = result.duration.toString().padStart(charsForTime)
+    val remaining = OUTPUT_WIDTH - start.length - end.length - distanceForNumber - 1 - charsForTime /* the '-' */
+    val resultText = result.value.toString().padEnd(remaining, ' ')
+    return "$start$numberText$resultText-$time$end"
+}
+
+private const val OUTPUT_WIDTH = 60
