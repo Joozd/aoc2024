@@ -49,6 +49,8 @@ fun main() {
             116 -> runDay(Day16(isTest = true))
             17 -> runDay(Day17())
             117 -> runDay(Day17(isTest = true))
+            18 -> runDay(Day18())
+            118 -> runDay(Day18(isTest = true))
             else -> break
 
         }
@@ -65,7 +67,7 @@ private fun runDay(day: Day){
     printResults(day, first, second)
 }
 
-private fun printResults(day: Day, first: TimedValue<Long>, second: TimedValue<Long>) {
+private fun printResults(day: Day, first: TimedValue<Any>, second: TimedValue<Any>) {
     println("******************************************************")
     println("***************      Day $day     **********************")
     println("******************************************************")
