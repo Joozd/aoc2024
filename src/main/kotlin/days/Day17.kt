@@ -7,13 +7,12 @@ class Day17(isTest: Boolean = false) : Day(17, isTest) {
      * I could have just hardcoded the program, but where's the fun in that?
      * So, I made a [Computer]!
      */
-    override fun first(): Long {
+    override fun first(): String {
         val computer = Computer.ofInput(input)
         while(computer.tick()){
             // do nothing
         }
-        println("${computer.output()}\n-=-\n\n")
-        return -1
+        return computer.output()
     }
 
     /**
@@ -30,15 +29,12 @@ class Day17(isTest: Boolean = false) : Day(17, isTest) {
     private fun findLowestSelfReproducing(program: List<Int>, currentA: Long): Long?{
         if (program.size == 1) {
             val last3Bits = (0..7).firstOrNull { works(currentA, it, program.first()) } ?: return null // base case; last 3 bits
-            println("DONE! $program $currentA")
             return currentA.shl(3) + last3Bits
         }
         val validCandidates = (0..7).filter { works(currentA, it, program.last())} // candidate for 3 bits to append to currentA
         return validCandidates.firstNotNullOfOrNull { last3Bits ->
             val newCurrentA = currentA.shl(3) + last3Bits
             findLowestSelfReproducing(program.dropLast(1), newCurrentA)
-        }.also{
-            println("Found solution $it for $program")
         }
     }
 
