@@ -18,7 +18,6 @@ class Day16(isTest: Boolean = false) : Day(16, isTest) {
         val map = maze.map { it.replace('E', '.')} // this way we only have to check for '.' and not both '.' and 'E'. Check for end using [endpos].
         val result = dijkstraHelemaalDeMoeder(map, startAndEnd.first, startAndEnd.second)
 
-        println("Simplified maze:\n${maze.joinToString("\n")}")
         return result.toLong()
     }
 
