@@ -38,24 +38,55 @@ class Day19(isTest: Boolean = false) : Day(19, isTest) {
                     }
         }
 
+//    /**
+//     * This is not pretty.
+//     * Sorry, I am tired.
+//     */
+//    private fun String.canBeMadeHowManyWays(
+//        patterns: Set<String>, shortesPattern: Int, longestPattern: Int, cache: HashMap<String, Long> = HashMap<String, Long>()
+//    ): Long =
+//        cache.getOrPut(this) {
+//            when {
+//                this.length < shortesPattern -> 0L
+//                else -> (shortesPattern..minOf(this.length, longestPattern)).sumOf { patternLength ->
+//                    when {
+//                        this.take(patternLength) !in patterns -> 0L
+//                        this.length == patternLength -> 1L
+//                        else -> this.substring(patternLength)
+//                            .canBeMadeHowManyWays(patterns, shortesPattern, longestPattern, cache)
+//                    }
+//                }
+//            }
+//        }
+
     /**
-     * This is not pretty.
-     * Sorry, I am tired.
+     * Check in how many ways a towel can be made
      */
     private fun String.canBeMadeHowManyWays(
         patterns: Set<String>, shortesPattern: Int, longestPattern: Int, cache: HashMap<String, Long> = HashMap<String, Long>()
-    ): Long =
-        cache.getOrPut(this) {
-            when {
-                this.length < shortesPattern -> 0L
-                else -> (shortesPattern..minOf(this.length, longestPattern)).sumOf { patternLength ->
-                    when {
-                        this.take(patternLength) !in patterns -> 0L
-                        this.length == patternLength -> 1L
-                        else -> this.substring(patternLength)
-                            .canBeMadeHowManyWays(patterns, shortesPattern, longestPattern, cache)
-                    }
-                }
+    ): Long {
+        cache[this]?.let { return it }
+
+        // base case: Current string shorter than shortest pattern -> no possible towels can be made
+        if(this.length < shortesPattern) return 0
+
+        var possiblePatterns = 0L
+
+        for(patternLength in shortesPattern..minOf(this.length, longestPattern)){
+            // early return: not possible
+            if(take(patternLength) !in patterns) {
+                continue
             }
+            // early return: pattern is entire towel
+            if(this.length == patternLength){
+                possiblePatterns++
+                continue
+            }
+            possiblePatterns += substring(patternLength).canBeMadeHowManyWays(patterns, shortesPattern, longestPattern, cache)
         }
+
+        return possiblePatterns.also{
+            cache[this] =it
+        }
+    }
 }
