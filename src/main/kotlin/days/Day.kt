@@ -8,9 +8,9 @@ abstract class Day(private val numberOfDay: Int, isTest: Boolean = false) {
         if(isTest) readTextFileFromResources("test_$numberOfDay.txt")
         else readTextFileFromResources("$numberOfDay.txt")
 
-    open fun first(): Any = numberOfDay.toLong()*100 + 1
+    open fun first(): Any? = numberOfDay.toLong()*100 + 1
 
-    open fun second(): Any = numberOfDay.toLong()*100 + 2
+    open fun second(): Any? = numberOfDay.toLong()*100 + 2
 
     override fun toString(): String = numberOfDay.toString().padStart(2, '0')
 
