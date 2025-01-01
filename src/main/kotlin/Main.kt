@@ -53,6 +53,9 @@ fun main() {
             118 -> runDay(Day18(isTest = true))
             19 -> runDay(Day19())
             119 -> runDay(Day19(isTest = true))
+            
+            20 -> runDay(Day20())
+            120 -> runDay(Day20(isTest = true))
             else -> break
 
         }
@@ -69,8 +72,8 @@ private fun runDay(day: Day){
     printResults(day, first, second)
 }
 
-private fun printResults(day: Day, first: TimedValue<Any>, second: TimedValue<Any>) {
-    val totalTimedValue: TimedValue<Any> = TimedValue("Total time", first.duration + second.duration)
+private fun printResults(day: Day, first: TimedValue<Any?>, second: TimedValue<Any?>) {
+    val totalTimedValue: TimedValue<Any?> = TimedValue("Total time", first.duration + second.duration)
     println(starLine())
     println(dayLine(day))
     println(starLine())
@@ -91,7 +94,7 @@ private fun dayLine(day: Day): String{
     return "*".repeat(before) + " ".repeat(margin) + text + " ".repeat(margin) + "*".repeat(after)
 }
 
-private fun timedResultLine(number: Int?, result: TimedValue<Any>): String{
+private fun timedResultLine(number: Int?, result: TimedValue<Any?>): String{
     // **  1. 1233456       - 24.990800ms  ** // take 12 chars for timing
     val start = "**  "
     val end = "  **"

@@ -76,3 +76,6 @@ fun LongVector.getLongScalarTo(other: LongVector): Long?{
     return if (scaleX == scaleY) scaleX else null
 }
 
+fun IntVector.withAllManhattanDistanceNeighbours(distance: Int) =
+    allVectorsWithManhattanDistance(distance).map { this + it}
+
